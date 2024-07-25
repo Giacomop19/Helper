@@ -1,0 +1,5 @@
+{
+    "watch": ["server"],
+    "ext": "ts",
+    "exec": "concurrently \"npx tsc --watch\" \"ts-node server/server.ts\""
+  }
