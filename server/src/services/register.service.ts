@@ -11,6 +11,7 @@ export async function registerUser(req :any, res: any){
     let user = await User.findOne({ email: req.body.email })
     if (user) {
         return res.status(400).send('User already exisits. Please sign in')
+        
     } else {
         try {
             const salt = await bcrypt.genSalt(10)

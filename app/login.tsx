@@ -1,15 +1,15 @@
-import { Button, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Button, Pressable, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { ThemedText  as Text} from "@/components/ThemedText";
 import { ThemedView  as View} from "@/components/ThemedView";
+import { Link } from "expo-router";
 import { useSession } from "./ctx";
 import { router } from "expo-router";
 
 export default function Login() {
   const { signIn } = useSession();
   const handleLogin = () => {
-    //Adicione sua lógica de login aqui
+    //TODO:: login logic
     signIn();
-    //Antes de navegar, tenha certeza de que o usuário está autenticado
     router.replace("/");
   };
 
@@ -33,7 +33,10 @@ export default function Login() {
       <TouchableOpacity onPress={handleLogin} style={styles.button} >
         <Text style={styles.text}>Login</Text>
       </TouchableOpacity>
-      <Text style={styles.signup}>Don't have an account? Sign up</Text>
+      <Text style={styles.signup}>Don't have an account?</Text> 
+      <Pressable onPress={() => router.push("/register")}>
+        <Text>Sign up</Text>
+      </Pressable>
     </View>
     
   );

@@ -1,6 +1,8 @@
 import React from "react";
 import { useStorageState } from "./useStorageState";
 
+
+const cli = process.env.CLIENT
 const AuthContext = React.createContext<{
   signIn: () => void;
   signOut: () => void;
@@ -12,6 +14,7 @@ const AuthContext = React.createContext<{
   session: null,
   isLoading: false,
 });
+
 
 // This hook can be used to access the user info.
 export function useSession() {
