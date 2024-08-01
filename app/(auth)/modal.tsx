@@ -9,17 +9,28 @@ import { useColorScheme } from '@/hooks/useColorScheme'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useSession } from '../ctx';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { useState } from 'react';
 
 export default function ModalScreen() {
   const colorScheme = useColorScheme()
   const img = require('../../assets/images/jacob_logo.jpeg')
   const { token } = useSession()
+  const [data, setData] = useState<any>()
 
-  // async function getData(){
-  //   axios
-  //     .post('http://localhost/getUser', token)
-  //     .then(res => )
-  //   }
+  async function getData(){
+    axios
+      .post('http://localhost:3000/api/getUser', {token : token})
+      .then(res =>{
+        console.log(res.data)
+        setData(res.data.data)
+      })
+      .catch(err =>{
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {getData()},[])
 
   return (
     <View style={styles.container}>
@@ -42,7 +53,7 @@ export default function ModalScreen() {
         />
       </View>
       <View style={{marginTop : 10}}>
-        <Text style={styles.title}>{"userData.name"}</Text>
+        <Text style={styles.title}>{data?.username}</Text>
       </View>
       <View style={{marginTop: 20, marginHorizontal: 25}}>
         <View style={styles.infoMain}>
@@ -57,7 +68,7 @@ export default function ModalScreen() {
             <View style={styles.infoText}>
               <Text style={styles.infoSmall_Text}>Email</Text>
               <Text style={styles.infoLarge_Text}>
-                {"userData.email"}
+                {data?.email}
               </Text>
             </View>
           </View>
@@ -74,7 +85,7 @@ export default function ModalScreen() {
             <View style={styles.infoText}>
               <Text style={styles.infoSmall_Text}>Profession</Text>
               <Text style={styles.infoLarge_Text}>
-                {"userData.profession"}
+                {data?.job}
               </Text>
             </View>
           </View>
@@ -91,7 +102,7 @@ export default function ModalScreen() {
             </View>
             <View style={styles.infoText}>
               <Text style={styles.infoSmall_Text}>Mobile</Text>
-              <Text style={styles.infoLarge_Text}>{"userData.mobile"}</Text>
+              <Text style={styles.infoLarge_Text}>{data?.mobile}</Text>
             </View>
           </View>
         </View>
