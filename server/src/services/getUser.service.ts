@@ -11,13 +11,12 @@ export async function getUser(req: Request, res: Response) {
     const {token} = req.body
     try {
         const id = await verifyToken(token)
-        // const user = await getUserById(id)
-        // return res.send({ status : 'Ok', data : user})
-        console.log(id)
-        const user = await User.findById(id)
-            .then((data) => {console.log(data) ; return data})
-            .catch((err) => {return err})
+        const user = await getUserById(id)
         return res.send({ status : 'Ok', data : user})
+        // const user = await User.findById(id)
+        //     .then((data) => {console.log(data) ; return data})
+        //     .catch((err) => {return err})
+        // return res.send({ status : 'Ok', data : user})
     } 
     catch (err: any) {
         return res.status(400).json({ message: err.message })
