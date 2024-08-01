@@ -10,14 +10,14 @@ export async function registerUser(req :any, res: any){
     }
     let user = await User.findOne({ email: req.body.email })
     if (user) {
-        return res.status(400).send('User already exisits. Please sign in')
+        return res.status(400).send('User already exists. Please sign in')
         
     } else {
         try {
             const salt = await bcrypt.genSalt(10)
             const password = await bcrypt.hash(req.body.password, salt)
             const user = new User({
-                name: req.body.name,
+                username: req.body.username,
                 email: req.body.email,
                 password: password
             })

@@ -1,16 +1,37 @@
-import { Button, Pressable, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Alert, Button, Pressable, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import { ThemedText  as Text} from "@/components/ThemedText";
 import { ThemedView  as View} from "@/components/ThemedView";
 import { Link } from "expo-router";
 import { useSession } from "./ctx";
 import { router } from "expo-router";
+import axios from "axios";
+import React, { useState } from "react";
 
 export default function Login() {
   const { signIn } = useSession();
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  //create local storage
   const handleLogin = () => {
-    //TODO:: login logic
-    signIn();
-    router.replace("/");
+    const userData = {
+      username,
+      password
+    }
+    axios
+    .post('http://localhost:3000/api/login', userData)
+    .then(res => {
+      console.log(res.data);
+      if (res.status == 200) {
+        signIn(res);
+        router.replace("/");
+      }
+    })
+    .catch(err => {
+      Alert.alert(err.response.data.message)
+      console.log(err)
+    });
+   
   };
 
   return (
@@ -24,15 +45,16 @@ export default function Login() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <TextInput placeholder="Username" style={styles.input} />
+      <TextInput placeholder="Username" style={styles.input} onChange={(e) => setUsername(e.nativeEvent.text)}/>
       <TextInput
         placeholder="Password"
         secureTextEntry
         style={styles.input}
+        onChange={(e) => setPassword(e.nativeEvent.text)}
       />
-      <TouchableOpacity onPress={handleLogin} style={styles.button} >
+      <Pressable onPress={handleLogin} style={styles.button} >
         <Text style={styles.text}>Login</Text>
-      </TouchableOpacity>
+      </Pressable>
       <Text style={styles.signup}>Don't have an account?</Text> 
       <Pressable onPress={() => router.push("/register")}>
         <Text>Sign up</Text>

@@ -30,7 +30,7 @@ export async function login(req: any, res: any) {
                 sameSite: "strict",
                 maxAge: jwtExpirySeconds * 1000
             })
-            res.json({ message: 'Successfully logged in' })
+            res.json({ message: 'Successfully logged in', token: token })
 
         } catch (err: any) {
             return res.status(400).json({ message: err.message })
