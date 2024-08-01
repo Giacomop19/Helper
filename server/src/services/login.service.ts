@@ -14,13 +14,13 @@ export async function login(req: any, res: any) {
         return res.status(401).send(error.details[0].message)
     } else {
         try {
-            let user = await User.findOne({ email: req.body.email })
+            let user = await User.findOne({ username: req.body.username })
             if (!user) {
-                return res.status(400).json({ message: 'Incorrect email or password.' })
+                return res.status(400).json({ message: 'Incorrect username or password.' })
             }
             const correctPassword = await bcrypt.compare(req.body.password, user.password)
             if (!correctPassword) {
-                return res.status(400).json({ message: 'Incorrect email or password.' })
+                return res.status(400).json({ message: 'Incorrect username or password.' })
             }
             const token = jwt.sign({ id: user._id }, SECRET)
             res.cookie(

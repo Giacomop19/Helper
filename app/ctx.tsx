@@ -38,7 +38,7 @@ export function SessionProvider(props: React.PropsWithChildren) {
       value={{
         signIn: async (data) => {
           try {
-            setToken(data.data.data);
+            setToken(data.data.token);
           }
           catch (err){
             console.error(err)
