@@ -3,11 +3,12 @@ import { User, validateUser } from "../models/user.model";
 import bcrypt from "bcrypt"
 import dotenv from 'dotenv'
 import jwt from "jsonwebtoken"
+import { Response, Request } from "express";
 dotenv.config()
 const SECRET = process.env.SECRET || "Password123"
 const jwtExpirySeconds = 300
 
-export async function login(req: any, res: any) {
+export async function login(req: Request, res: Response) {
     await DBConnection()
     const { error } = validateUser(req.body)
     if (error) {
