@@ -1,7 +1,6 @@
-import { Alert, Button, Pressable, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { Alert, Pressable, StyleSheet, TextInput } from "react-native";
 import { ThemedText  as Text} from "@/components/ThemedText";
 import { ThemedView  as View} from "@/components/ThemedView";
-import { Link } from "expo-router";
 import { useSession } from "./ctx";
 import { router } from "expo-router";
 import axios from "axios";
@@ -31,7 +30,6 @@ export default function Login() {
       Alert.alert(err.response.data.message)
       console.log(err)
     });
-   
   };
 
   return (

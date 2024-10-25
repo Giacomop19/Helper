@@ -10,6 +10,7 @@ const UserSchema = new mongoose.Schema({
     password : {type : String, required : true},
     job : {type: String, required :false},
     mobile: {type: String, required: false},
+    avatar: {data: Buffer, contentType: String}
 }, {collection : 'user'})
 
 export let validateUser = (user: any) => {
@@ -20,6 +21,7 @@ export let validateUser = (user: any) => {
         password : Joi.string().required(),
         job : Joi.string(),
         mobile : Joi.string(),
+        avatar : Joi.object()
         })
     return schema.validate(user)
 }

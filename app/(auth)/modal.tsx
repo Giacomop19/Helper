@@ -1,29 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, ScrollView, Pressable, Image } from 'react-native';
-import EditScreenInfo from '@/components/EditScreenInfo';
+import { StyleSheet, Pressable, Image, TextInput } from 'react-native';
 import { ThemedText as Text } from '@/components/ThemedText';
 import { ThemedView as View } from '@/components/ThemedView';
-import {FontAwesome} from '@expo/vector-icons';
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from '@/hooks/useColorScheme'
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, FontAwesome} from '@expo/vector-icons';
 import { useSession } from '../ctx';
 import axios from 'axios';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import UserDto from '@/helpers/user';
 
 export default function ModalScreen() {
   const colorScheme = useColorScheme()
   const img = require('../../assets/images/jacob_logo.jpeg')
   const { token } = useSession()
-  const [data, setData] = useState<any>()
+  const [pressed, setPressed] = useState(false)
+  const [editUser, setEditUser] = useState(true)
+  const [user, setUser] = useState<UserDto>({
+    username : "",
+    email : "",
+    date : new Date,
+    job: "",
+    mobile: "",
+    avatar: ""
+  })
 
   async function getData(){
     axios
       .post('http://localhost:3000/api/getUser', {token : token})
       .then(res =>{
-        console.log(res.data)
-        setData(res.data.data)
+        console.log(res.data.data)
+        setUser((prevState) => ({
+          ...prevState,
+          username : res.data.data.username,
+          email : res.data.data.email,
+          job : res.data.data?.job,
+          mobile : res.data.data?.mobile,
+        }))
+        console.log(user)
       })
       .catch(err =>{
         console.log(err)
@@ -32,19 +45,45 @@ export default function ModalScreen() {
 
   useEffect(() => {getData()},[])
 
+  const editInfoUser = () => {
+    setEditUser(!editUser)
+    setPressed(!pressed)
+  }
+
+  const handleUserChange = (prop: string, newProp: any) =>{
+    setUser((prevUser) => ({
+      ...prevUser,
+      [prop]: newProp,
+    }))
+    console.log("userChange", user)
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.edit}> 
-        <Pressable>
+        {!pressed ? (
+          <Pressable onPress={()=> editInfoUser()}>
           {({ pressed }) => (
-            <FontAwesome
+             <FontAwesome
               name="edit"
               size={25}
               color={Colors[colorScheme ?? "dark"].text}
               style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-            />
+              />
           )}
-        </Pressable>
+          </Pressable>
+        ):(
+          <Pressable onPress={()=> editInfoUser()}>
+            {({ pressed }) => (
+             <FontAwesome
+              name="save"
+              size={25}
+              color={Colors[colorScheme ?? "dark"].text}
+              style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+              />
+          )}
+          </Pressable>
+        )}
       </View>
       <View style={{alignItems: 'center'}}>
         <Image
@@ -53,7 +92,7 @@ export default function ModalScreen() {
         />
       </View>
       <View style={{marginTop : 10}}>
-        <Text style={styles.title}>{data?.username}</Text>
+        <Text style={styles.title}>{user?.username}</Text>
       </View>
       <View style={{marginTop: 20, marginHorizontal: 25}}>
         <View style={styles.infoMain}>
@@ -68,7 +107,7 @@ export default function ModalScreen() {
             <View style={styles.infoText}>
               <Text style={styles.infoSmall_Text}>Email</Text>
               <Text style={styles.infoLarge_Text}>
-                {data?.email}
+                {user?.email}
               </Text>
             </View>
           </View>
@@ -76,17 +115,22 @@ export default function ModalScreen() {
         <View style={styles.infoMain}>
           <View style={styles.infoCont}>
             <View style={{marginTop: 10}}>
-            <FontAwesome5
-              name="book"
-              size={25}
-              color={Colors[colorScheme ?? "dark"].text}
-            />
+              <FontAwesome5
+                name="book"
+                size={25}
+                color={Colors[colorScheme ?? "dark"].text}
+              />
             </View>
             <View style={styles.infoText}>
               <Text style={styles.infoSmall_Text}>Profession</Text>
-              <Text style={styles.infoLarge_Text}>
-                {data?.job}
-              </Text>
+              <TextInput 
+                style={styles.infoLarge_Text} 
+                editable={!editUser} 
+                selectTextOnFocus={!editUser}
+                value={user?.job}
+                onChangeText={(text) => handleUserChange("job", text)}
+                >
+              </TextInput>
             </View>
           </View>
         </View>
@@ -102,7 +146,14 @@ export default function ModalScreen() {
             </View>
             <View style={styles.infoText}>
               <Text style={styles.infoSmall_Text}>Mobile</Text>
-              <Text style={styles.infoLarge_Text}>{data?.mobile}</Text>
+              <TextInput 
+                style={styles.infoLarge_Text}
+                editable={!editUser} 
+                selectTextOnFocus={!editUser}
+                value={user?.mobile}
+                onChangeText={(text) => handleUserChange("mobile", text)}
+                >
+              </TextInput>
             </View>
           </View>
         </View>
