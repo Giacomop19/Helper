@@ -4,6 +4,7 @@ import EditScreenInfo from "@/components/EditScreenInfo";
 import { ThemedText as Text } from "@/components/ThemedText";
 import { ThemedView as View } from "@/components/ThemedView";
 import { useSession } from "../../ctx";
+import GoogleMapComponent from "@/components/GoogleMap";
 
 export default function TabOneScreen() {
   const { signOut, session } = useSession();
@@ -16,7 +17,7 @@ export default function TabOneScreen() {
         lightColor="#eee"
         darkColor="rgba(255,255,255,0.1)"
       />
-      <EditScreenInfo path="app/(auth)/(tabs)/index.tsx" />
+      <GoogleMapComponent />
       <Button
         title="Sign Out"
         onPress={() => {
